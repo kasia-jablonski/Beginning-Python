@@ -23,10 +23,20 @@ books = [
 books[-1]   # the last element  books[(len(books)-1)]
 books.insert(0, "Learning Python: Powerful Object-Oriented Programming")
 
+# Slices
+
+books[1:4]  # takes from element with index 1 do element with index 3; 3 list items
+books[:2]   # starts with index 0; first 2 items
+books[2:]   # takes from element with index 2 to the last element
+books[-2:]  # the last 2 items
+books[-2:-5:-1] # the last 3 items backwards
+books[::-1] # entire list backwards
+
 "\N{TACO}"  #changes to unicode'🌮'
 
-#del books[0]   - removes label of element
+#del books[0]   - removes label of element with index .. 
 #recommend = books.pop()    - returns the last element and removes it from list
+#list.remove("item")    - removes first instance of the item in the list
 
 # Split and Join
 quote = "The greatest teacher failure is"
@@ -48,3 +58,4 @@ week_number = 1
 for week in travel_expenses:
     print("Week #{}: ${}".format(week_number,sum(week)))
     week_number += 1
+
