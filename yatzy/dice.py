@@ -35,6 +35,9 @@ class Die:
     def __radd__(self, other):
         return self + other
 
+    def __repr__(self):
+        return str(self.value)          # so we know what our value is
+
 
 class D6(Die):
     def __init__(self, value=0):
