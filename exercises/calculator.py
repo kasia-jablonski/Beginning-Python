@@ -23,29 +23,26 @@ def calculate(x):
 
 def check_type(number):
     x = input("Enter %s number: " %(number))
-    print(x)
     if (re.match("^-?\d+(\.\d+)?$", x) != None):
-        print('----')
-        print(x)
         if (re.match("^-?\d+?[.]\d+$", x)):
             return float(x)
         else :
             return int(x)
-        print("Should not print")
-    else:
-        check_type(number)
+    return None
 
 a = check_type("first")
-print(a)
+while (a == None):
+    a = check_type("first")
+
 show_operations()
 o = input("> ")
 while (o not in ['+', '-', '*', '/']):
     show_operations()
     o = input("> ")
 
-print(o)
-
 b = check_type("second")
+while (b == None):
+    b = check_type("second")
 
 result = calculate(o)
 print("Result is " + str(result))
