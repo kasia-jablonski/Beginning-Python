@@ -45,17 +45,21 @@ def game_over(incorrect, word):
     else:
         return False
 
+def start_game():
+    not_guessed = 0
 
+new_game = True
+continue_game = True
 
-# while continue_game == True:
-not_guessed = 0
-letters_not_in_word = []
-new_word = generate_word()
-# print(new_word)
-guess = create_blanks(new_word)
-print_word(guess)
-letter = ""
-while( (game_over(not_guessed, new_word) != True) and ("_" in guess != False)):
+while(continue_game):
+    if new_game == True:
+        not_guessed = 0
+        letters_not_in_word = []
+        new_word = generate_word()
+        guess = create_blanks(new_word)
+        print_word(guess)
+        letter = ""
+        new_game = False
     while(letter.isalpha() == False or len(letter) != 1):
         print("Enter letter: ")
         letter = (input("> ")).lower()
@@ -67,12 +71,20 @@ while( (game_over(not_guessed, new_word) != True) and ("_" in guess != False)):
         print_word(guess)
     else:
         not_guessed += 1
-        if game_over(not_guessed, new_word) == True:
-            break
+        # if game_over(not_guessed, new_word) == True:
+        #     break
         letters_not_in_word += letter
         print_letters_not_in_word(letters_not_in_word)
         print_word(guess)
     letter = ""
+    
+    continue_game = (game_over(not_guessed, new_word) != True) and ("_" in guess != False)
+    if continue_game != True:
+        print("Play Again (Y/N)")
+        answer = (input("> ")).lower()
+        if (answer == "y"):
+            continue_game = True
+            new_game = True
     
     
 
