@@ -4,11 +4,32 @@ import random
 words = ["zigzag", "zilch", "zipper", "zodiac"]
 root = Tk()
 root.title("Hangman game")
+
 def generate_word(list=words):
     x = random.randint(0, (len(list)-1))
     return list[x]
 
-new_word = generate_word() 
+def create_blanks(word):
+    x = len(word)
+    tab = []
+    for i in range(x):
+        tab += "_"
+    return tab
+
+def print_word(t):
+    return (" ".join(t))
+
+new_word = generate_word()
+not_guessed = 0
+letters_not_in_word = []
+guess = create_blanks(new_word)
+
+label_word = Label(root, text = print_word(guess))
+label_word.grid(row=0,column=0, columnspan=4)
+
+label_not_guessed = Label(root, text="Letters not guessed: " + str(not_guessed) + " out of 8")
+label_not_guessed.grid(row=8, column=0, columnspan=4)
+
 def button_click(index, letter):
     globals()['button_A'].config(state = DISABLED)
 # frame = Frame(root)
