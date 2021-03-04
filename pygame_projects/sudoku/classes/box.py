@@ -8,3 +8,4 @@ class Box(object):
     def fill_number(self, number):
         #sprawdzic czy numer jest ok i wpisac
         return 
+        
