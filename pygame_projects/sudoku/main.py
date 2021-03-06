@@ -2,15 +2,19 @@
 import pygame
 import random
 import math
+import time
 import numpy as np
 
 pygame.init()
 LINE_COLOR = (0, 0, 0)
 LINE_WIDTH_THICK = 4
 LINE_WIDTH_THIN = 2
+BG_COLOR = (211, 201, 206)
+FILL_COLOR = (183, 166, 173)
+HIGHLIGHT_COLOR = (213, 196, 161)
 
 
-screen = pygame.display.set_mode( (600, 600) )
+screen = pygame.display.set_mode( (600, 450) )
 
 pygame.display.set_caption("Sudoku")
 icon = pygame.image.load('sudoku.png')
@@ -122,10 +126,10 @@ def check_if_correct(c):
     else: 
         return False
         
-f = [1, 2, 3,4, 5, 6, 7, 8, 8]
-g = [2, 3, 4, 5, 6, 7, 8, 9, 1]
-print(check_if_correct(f))
-print(check_if_correct(g))
+# f = [1, 2, 3,4, 5, 6, 7, 8, 8]
+# g = [2, 3, 4, 5, 6, 7, 8, 9, 1]
+# print(check_if_correct(f))
+# print(check_if_correct(g))
 
 def check_sudoku(sudoku):
     # check rows
@@ -148,13 +152,103 @@ def check_sudoku(sudoku):
 
 draw_board()
 sudoku_board = draw_sudoku()
-print(sudoku_board)
-check_sudoku(sudoku_board)
+# print(sudoku_board)
+# check_sudoku(sudoku_board)
+
+player_board = np.zeros((9,9))
+for i in range(3):
+    for j in range(3):
+        box = sudoku_board[(i*3):(i*3+3), (j*3):(j*3+3)]
+        numberArray = []
+        while (len(numberArray) < 3):
+            number = random.randint(1, 9)
+            if number not in numberArray:
+                numberArray.append(number)
+                index = np.argwhere(box == number)
+                player_board[(i*3):(i*3+3), (j*3):(j*3+3)] [index[0][0], index[0][1]] = number
+        
+    print(player_board)
+
+font = pygame.font.Font('freesansbold.ttf', 32)
+font2 = pygame.font.Font('freesansbold.ttf', 48)
+
+def show_number(value, x, y):
+    number = font.render(str(value), True, (0, 0, 0))
+    screen.blit(number, (x*40+30, y*40+30))
+
+def show_number2(value, x, y):
+    number = font2.render(str(value), True, (0, 0, 0))
+    screen.blit(number, (x+13, y+7))
+
+def color_rect(x, y, color):
+    ry = y*40 + 22
+    rx = x*40 + 22
+    pygame.draw.rect(screen, color, pygame.Rect(rx, ry, 38, 38))
+
+def format_time(time):
+    minutes = math.floor(time/60)
+    seconds = time - minutes*60
+    if seconds < 9:
+        return str(minutes) + ":0" + str(seconds)
+    else:
+        return str(minutes) + ":" + str(seconds)
+
+for i in range(9):
+    for j in range(9):
+        if player_board[i][j] != 0:
+            color_rect(i, j, FILL_COLOR)
+            show_number(int(player_board[i][j]), i, j)
+
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 20, 55, 55))
+# show_number2(1, 420, 20)
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(500, 20, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 95, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(500, 95, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 170, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(500, 170, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 245, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(500, 245, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 320, 55, 55))
+# pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(500, 320, 55, 55))
+
+for i in range(1, 10, 2):
+    x = 420
+    y = 20 + (math.floor(i/2))*75
+    pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(x, y, 55, 55))
+    show_number2(i, x, y)
+
+for i in range(2, 11, 2):
+    
+    x = 500
+    y = 20 + ((i/2)-1)*75
+    pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(x, y, 55, 55))
+    if i < 10:
+        show_number2(i, x, y)
+
+eraser = pygame.image.load('eraser.png')
+screen.blit(eraser, (495, 315))
+    
+
+
+
+
+# show_number(1, 30, 30)
+# show_number(2, 70, 30)
+# show_number(3, 110, 30)
+# show_number(4, 150, 30)
+
 running = True
 
+    
+    
+
+startTime = time.time()
+
 while running:
-
-
+    draw_board()
+    pygame.draw.rect(screen, BG_COLOR, pygame.Rect(200, 400, 100, 100))
+    label = font.render(str(format_time(int(time.time() - startTime))), True, (0, 0, 0))
+    screen.blit(label, (200, 400))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -166,9 +260,69 @@ while running:
 
             print(mouseX, mouseY)
             if (mouseX > 20 and mouseX < 380) and (mouseY > 20 and mouseY < 380):
+                try:
+                    color_rect(clicked_col, clicked_row, BG_COLOR)
+                except NameError:
+                    clicked_col = None
                 clicked_col = math.floor((mouseX-20)/40)
                 clicked_row = math.floor((mouseY-20)/40)
+                if player_board[clicked_col][clicked_row] == 0:
+                    color_rect(clicked_col, clicked_row, HIGHLIGHT_COLOR)
+            try:
+                if (mouseX > 420 and mouseX < 475) and (mouseY > 20 and mouseY < 75):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(1, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 1
 
-                print(clicked_row, clicked_col)
+                if (mouseX > 500 and mouseX < 555) and (mouseY > 20 and mouseY < 75):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(2, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 2
+
+                if (mouseX > 420 and mouseX < 475) and (mouseY > 95 and mouseY < 150):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(3, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 3
+
+                if (mouseX > 500 and mouseX < 555) and (mouseY > 95 and mouseY < 150):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(4, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 4
+
+                if (mouseX > 420 and mouseX < 475) and (mouseY > 170 and mouseY < 225):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(5, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 5
+
+                if (mouseX > 500 and mouseX < 555) and (mouseY > 170 and mouseY < 225):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(6, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 6
+
+                if (mouseX > 420 and mouseX < 475) and (mouseY > 245 and mouseY < 300):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(7, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 7
+
+                if (mouseX > 500 and mouseX < 555) and (mouseY > 245 and mouseY < 300):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(8, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 8
+
+                if (mouseX > 420 and mouseX < 475) and (mouseY > 320 and mouseY < 375):
+                    if (player_board[clicked_col][clicked_row]) == 0:
+                        show_number(9, clicked_col, clicked_row)
+                        player_board[clicked_col][clicked_row] = 9
+
+                if (mouseX > 500 and mouseX < 555) and (mouseY > 320 and mouseY < 375):
+                    if (player_board[clicked_col][clicked_row]) != 0:
+                        color_rect(clicked_col, clicked_row, BG_COLOR)
+                        player_board[clicked_col][clicked_row] = 0
+            except NameError:
+                clicked_col = None
+
+            
+                #print(clicked_row, clicked_col)
                 
     pygame.display.update()
+
