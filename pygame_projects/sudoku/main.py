@@ -196,8 +196,8 @@ def format_time(time):
 for i in range(9):
     for j in range(9):
         if player_board[i][j] != 0:
-            color_rect(i, j, FILL_COLOR)
-            show_number(int(player_board[i][j]), i, j)
+            color_rect(j, i, FILL_COLOR)
+            show_number(int(player_board[i][j]), j, i)
 
 # pygame.draw.rect(screen, (183, 166, 173), pygame.Rect(420, 20, 55, 55))
 # show_number2(1, 420, 20)
@@ -278,6 +278,7 @@ while running:
                     if (player_board[clicked_col][clicked_row]) == 0:
                         show_number(2, clicked_col, clicked_row)
                         player_board[clicked_col][clicked_row] = 2
+                        
 
                 if (mouseX > 420 and mouseX < 475) and (mouseY > 95 and mouseY < 150):
                     if (player_board[clicked_col][clicked_row]) == 0:
