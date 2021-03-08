@@ -1,3 +1,4 @@
+# Color constants
 BACKGROUND_COLOR = (211, 201, 206)
 BLACK_COLOR = (0, 0, 0)
 FILL_COLOR = (183, 166, 173)

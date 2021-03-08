@@ -5,7 +5,7 @@ import numpy as np
 from constants.colors import BACKGROUND_COLOR, HIGHLIGHT_COLOR
 from classes.Box import Box
 from classes.Buttons import Button
-from utils.gameSetup import create_sudoku_puzzle, draw_board, draw_number_buttons
+from utils.gameSetup import create_sudoku_puzzle, draw_board, draw_number_buttons, create_initial_sudoku_board
 
 pygame.init()
 
@@ -18,42 +18,13 @@ font2 = pygame.font.Font('freesansbold.ttf', 48)
 
 screen.fill(BACKGROUND_COLOR)
 
-running = True
-
-button_list = []
-button_list = draw_number_buttons(screen, font2)
-
-
 # Game Setup
-
-sudoku_board_solved = create_sudoku_puzzle()
-boxes = []
+button_list = draw_number_buttons(screen, font2)
+boxes = create_initial_sudoku_board(screen, font)
 
 button_number_clicked =  Button(-50, -50, '') # off screen blank button
 
-player_board = np.zeros((9,9))
-for i in range(3):
-    for j in range(3):
-        box = sudoku_board_solved[(i*3):(i*3+3), (j*3):(j*3+3)]
-        numberArray = []
-        while (len(numberArray) < 3):
-            number = random.randint(1, 9)
-            if number not in numberArray:
-                numberArray.append(number)
-                index = np.argwhere(box == number)
-                player_board[(i*3):(i*3+3), (j*3):(j*3+3)] [index[0][0], index[0][1]] = number
-
-for x in range(0, 9):
-    for y in range(0, 9):
-        boxes.append(
-            Box(
-                screen,
-                font,
-                40 * x + 20, 40 * y + 20,
-                player_board[y][x]
-            )
-        )
-
+running = True
 while running:
     draw_board(screen)
     for event in pygame.event.get():
@@ -86,6 +57,5 @@ while running:
             
             if button_number_clicked.selected is False:
                 button_number_clicked.select_button(screen)
-
 
     pygame.display.update()

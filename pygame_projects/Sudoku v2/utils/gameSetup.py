@@ -4,6 +4,7 @@ import random
 import numpy as np
 from constants.colors import BLACK_COLOR
 from classes.Buttons import Numeric_Button, Erase_Button
+from classes.Box import Box
 LINE_WIDTH_THICK = 4
 LINE_WIDTH_THIN = 1
 
@@ -95,6 +96,33 @@ def create_sudoku_puzzle():
     board[6][:] = row78
 
     return board
+
+def create_initial_sudoku_board(screen, font):
+    sudoku_board_solved = create_sudoku_puzzle()
+    boxes = []
+    player_board = np.zeros((9,9))
+    for i in range(3):
+        for j in range(3):
+            box = sudoku_board_solved[(i*3):(i*3+3), (j*3):(j*3+3)]
+            numberArray = []
+            while (len(numberArray) < 3):
+                number = random.randint(1, 9)
+                if number not in numberArray:
+                    numberArray.append(number)
+                    index = np.argwhere(box == number)
+                    player_board[(i*3):(i*3+3), (j*3):(j*3+3)] [index[0][0], index[0][1]] = number
+
+    for x in range(0, 9):
+        for y in range(0, 9):
+            boxes.append(
+                Box(
+                    screen,
+                    font,
+                    40 * x + 20, 40 * y + 20,
+                    player_board[y][x]
+                )
+            )
+    return boxes
 
 def draw_number_buttons(screen, font):
     number_list = []
