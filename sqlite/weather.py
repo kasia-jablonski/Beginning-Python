@@ -1,8 +1,12 @@
 from tkinter import *
 import requests
 import json
+import os
+from dotenv import load_dotenv
 
-# https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=06901&distance=5&API_KEY=61F01309-4BE3-4EEC-884E-7ECEA28FBCC5
+load_dotenv()
+
+WEATHER_API = os.getenv('WEATHER_API')
 
 root = Tk()
 root.title('Air Quality')
@@ -15,7 +19,7 @@ def zipLookup():
     # zipLabel.grid(row=1, column=0, columnspan=2)
 
     try:
-        api_request = requests.get("https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=" + zip.get() + "&distance=5&API_KEY=61F01309-4BE3-4EEC-884E-7ECEA28FBCC5")
+        api_request = requests.get("https://www.airnowapi.org/aq/observation/zipCode/current/?format=application/json&zipCode=" + zip.get() + "&distance=5&API_KEY=" + WEATHER_API)
         api = json.loads(api_request.content)
         city = api[0]['ReportingArea']
         quality = api[0]['AQI']
